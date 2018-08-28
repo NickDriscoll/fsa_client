@@ -15,11 +15,12 @@ public class Game extends ApplicationAdapter {
 	Texture img;
 	BitmapFont font;
 	Socket socket;
+	boolean connected;
 
 	private boolean connect_to_server() {
 		//Try all ip addresses looking for one where port 1337 is open
 		String addr_header = "192.168.1.";
-		int last_number = 0;
+		int last_number = 2;
 
 		while (last_number < 256)
 		{
@@ -40,6 +41,7 @@ public class Game extends ApplicationAdapter {
 		img = new Texture("badlogic.jpg");
 		font = new BitmapFont();
 		font.getData().setScale(5f);
+		connected = connect_to_server();
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		if (connect_to_server())
+		if (connected)
 			font.draw(batch, "Connected to server!",Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 		else
 			font.draw(batch, "Unable to find server.",Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
