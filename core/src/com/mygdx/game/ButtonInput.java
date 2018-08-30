@@ -11,6 +11,7 @@ public class ButtonInput extends Rectangle {
     private float x, y;
 
     static final int NUMBER_OF_BUTTONS = 5;
+    final int scale = 5;
 
     public ButtonInput(float x, float y, int index) {
         //Initialize static texture if it doesn't already exist
@@ -20,7 +21,7 @@ public class ButtonInput extends Rectangle {
         this.x = x;
         this.y = y;
         this.index = index;
-        width = texture.getWidth() / NUMBER_OF_BUTTONS; //Only assign to WIDTH here please
+        width = texture.getWidth() / NUMBER_OF_BUTTONS;
         height = texture.getHeight();
     }
 
