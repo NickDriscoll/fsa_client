@@ -9,65 +9,21 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Game extends ApplicationAdapter implements InputProcessor {
+public class Game extends ApplicationAdapter {
 	SpriteBatch batch;
 	BitmapFont font;
-	Texture controls;
 	Socket socket;
 	boolean connected;
-	boolean touched;
 	ButtonInput[] buttons;
+	TouchProcessor touch_processor;
+	PrintWriter to_server;
 
 	char input_bitmask;
 
-	const int NUMBER_OF_BUTTONS = 6;
-
-	@Override
-	public boolean keyDown(int a) {
-		return false;
-	}
-
-	@Override
-	public boolean keyUp(int a) {
-		return false;
-	}
-
-	@Override
-	public boolean keyTyped(char c) {
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean mouseMoved(int screenX, int screenY) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean scrolled(int amount) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		touched = true;
-		return true;
-	}
-
-	@Override
-	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		touched = false;
-		return true;
-	}
+	final int NUMBER_OF_BUTTONS = 6;
 
 	private boolean connect_to_server() {
 		//Try all ip addresses looking for one where port 1337 is open
@@ -92,18 +48,23 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 		batch = new SpriteBatch();
 		font = new BitmapFont();
 		font.getData().setScale(5f);
-		controls = new Texture(Gdx.files.internal("touch_buttons_0.png"));
 
-		Gdx.input.setInputProcessor(this);
+		touch_processor = new TouchProcessor();
+		Gdx.input.setInputProcessor(touch_processor);
 
 		input_bitmask = 0;
-		touched = false;
 
 		//Initialize the six buttons
 		buttons = new ButtonInput[NUMBER_OF_BUTTONS];
-		buttons[0] = new ButtonInput(0, Gdx.graphics.getHeight() * (5.0 / 6.0));
+		buttons[0] = new ButtonInput(0f, (float)(Gdx.graphics.getHeight() * (1.0 / 6.0)), ButtonInput.Buttons.Left.getValue());
 
 		connected = connect_to_server();
+
+		try {
+			to_server = new PrintWriter(socket.getOutputStream(), true);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	@Override
@@ -112,26 +73,26 @@ public class Game extends ApplicationAdapter implements InputProcessor {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//Get touchscreen state
+		input_bitmask = touch_processor.getBitmask();
 
 		//Update
 
+		//Send bitmask to server
+		to_server.write(input_bitmask);
+
 		//Draw
 		batch.begin();
-		batch.draw(controls, 0, 0, Gdx.graphics.getWidth(), controls.getHeight() * (Gdx.graphics.getWidth() / controls.getWidth()));
+
+		for (ButtonInput button : buttons) {
+			if (button != null)
+				button.draw(batch);
+		}
+
 		batch.end();
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
-	}
-
-	enum Buttons {
-		Left,
-		Right,
-		Up,
-		Down,
-		B,
-		A
 	}
 }
