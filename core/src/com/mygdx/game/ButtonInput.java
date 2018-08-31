@@ -29,13 +29,20 @@ public class ButtonInput extends Rectangle {
         batch.draw(texture, x, y, (int)width * index, 0, (int)width, (int)height);
     }
 
-
+    public static void init_buttons(ButtonInput[] buttons) {
+        buttons[Buttons.Left.getValue()] = new ButtonInput(0f, 0, Buttons.Left.getValue());
+        buttons[Buttons.Down.getValue()] = new ButtonInput(texture.getWidth() / NUMBER_OF_BUTTONS, 0, Buttons.Down.getValue());
+        buttons[Buttons.Right.getValue()] = new ButtonInput(texture.getWidth() / NUMBER_OF_BUTTONS * 2, 0, Buttons.Right.getValue());
+        buttons[Buttons.Up.getValue()] = new ButtonInput(texture.getWidth() / NUMBER_OF_BUTTONS, texture.getHeight(), Buttons.Up.getValue());
+        buttons[Buttons.A.getValue()] = new ButtonInput(Gdx.graphics.getWidth() - texture.getWidth() / NUMBER_OF_BUTTONS, 0, Buttons.B.getValue());
+        buttons[Buttons.B.getValue()] = new ButtonInput(Gdx.graphics.getWidth() - texture.getWidth() * 2 / NUMBER_OF_BUTTONS, 0, Buttons.B.getValue());
+    }
 
     public enum Buttons {
         Left(0),
-        Right(1),
+        Down(1),
         Up(2),
-        Down(3),
+        Right(3),
         B(4),
         A(5);
 

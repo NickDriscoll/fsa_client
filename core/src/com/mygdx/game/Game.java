@@ -56,15 +56,15 @@ public class Game extends ApplicationAdapter {
 
 		//Initialize the six buttons
 		buttons = new ButtonInput[NUMBER_OF_BUTTONS];
-		buttons[0] = new ButtonInput(0f, (float)(Gdx.graphics.getHeight() * (1.0 / 6.0)), ButtonInput.Buttons.Left.getValue());
+        ButtonInput.init_buttons(buttons);
 
-		connected = connect_to_server();
+		//connected = connect_to_server();
 
-		try {
+		/*try {
 			to_server = new PrintWriter(socket.getOutputStream(), true);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
-		}
+		}*/
 	}
 
 	@Override
@@ -78,7 +78,10 @@ public class Game extends ApplicationAdapter {
 		//Update
 
 		//Send bitmask to server
-		to_server.write(input_bitmask);
+		//to_server.write(input_bitmask);
+
+		//Get game state from server
+
 
 		//Draw
 		batch.begin();
