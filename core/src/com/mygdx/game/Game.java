@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import sun.rmi.runtime.Log;
+
 public class Game extends ApplicationAdapter {
 	SpriteBatch batch;
 	BitmapFont font;
