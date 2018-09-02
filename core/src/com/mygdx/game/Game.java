@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -21,28 +22,19 @@ public class Game extends ApplicationAdapter {
 	boolean connected;
 	ButtonInput[] buttons;
 	TouchProcessor touch_processor;
-	PrintWriter to_server;
+	OutputStream to_server;
 
 	char input_bitmask;
 
 	final int NUMBER_OF_BUTTONS = 6;
 
 	private boolean connect_to_server() {
-		//Try all ip addresses looking for one where port 1337 is open
-		String addr_header = "192.168.1.";
-		int last_number = 2;
-
-		while (last_number < 256)
-		{
-			try {
-				socket = new Socket(addr_header + last_number, 1337);
-				return true;
-			} catch (IOException e) {
-				socket = null;
-			}
-			last_number++;
-		}
-		return false;
+	    try {
+            socket = new Socket("192.168.1.5", 1337);
+        } catch (IOException e) {
+	        return false;
+        }
+        return true;
 	}
 
 	@Override
@@ -60,13 +52,12 @@ public class Game extends ApplicationAdapter {
 		buttons = new ButtonInput[NUMBER_OF_BUTTONS];
         ButtonInput.init_buttons(buttons);
 
-		//connected = connect_to_server();
-
-		/*try {
-			to_server = new PrintWriter(socket.getOutputStream(), true);
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}*/
+		connected = connect_to_server();
+		try {
+            to_server = socket.getOutputStream();
+        } catch (IOException e) {
+		    System.out.println(e.getMessage());
+        }
 	}
 
 	@Override
@@ -80,7 +71,11 @@ public class Game extends ApplicationAdapter {
 		//Update
 
 		//Send bitmask to server
-		//to_server.write(input_bitmask);
+        try {
+            to_server.write(input_bitmask);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
 
 		//Get game state from server
 
