@@ -4,14 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 
 public class ButtonInput extends Rectangle {
     private static Texture texture; //Texture containing all buttons
     private int index;  //Where to read from the texture
-    private float x, y;
 
     static final int NUMBER_OF_BUTTONS = 5;
-    final int scale = 5;
 
     public ButtonInput(float x, float y, int index) {
         //Initialize static texture if it doesn't already exist
@@ -36,6 +35,10 @@ public class ButtonInput extends Rectangle {
         buttons[Buttons.Up.getValue()] = new ButtonInput(texture.getWidth() / NUMBER_OF_BUTTONS, texture.getHeight(), Buttons.Up.getValue());
         buttons[Buttons.A.getValue()] = new ButtonInput(Gdx.graphics.getWidth() - texture.getWidth() / NUMBER_OF_BUTTONS, 0, Buttons.B.getValue());
         buttons[Buttons.B.getValue()] = new ButtonInput(Gdx.graphics.getWidth() - texture.getWidth() * 2 / NUMBER_OF_BUTTONS, 0, Buttons.B.getValue());
+    }
+
+    public Vector2 getPosition() {
+        return new Vector2(x, y);
     }
 
     public enum Buttons {

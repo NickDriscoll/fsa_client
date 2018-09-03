@@ -1,19 +1,13 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TouchProcessor implements InputProcessor {
-    private class Point {
-        public int x;
-        public int y;
-
-        public Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    private Point[] touches;
+    private List<Vector2> touches;
     final int MAX_NUMBER_OF_TOUCHES = 10;
 
     @Override
@@ -52,6 +46,7 @@ public class TouchProcessor implements InputProcessor {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         System.out.println("Touch at " + screenX + ". " + screenY);
+        touches.add(new Vector2(screenX, screenY));
         return true;
     }
 
@@ -62,10 +57,27 @@ public class TouchProcessor implements InputProcessor {
     }
 
     public TouchProcessor() {
-        touches = new Point[MAX_NUMBER_OF_TOUCHES];
+        touches = new ArrayList<Vector2>();
     }
 
-    public char getBitmask() {
-        return 0;
+    public char getBitmask(ButtonInput[] buttons) {
+        char bitmask = 0;
+
+        //Collision check here
+        for (int i = 0; i < buttons.length; i++) {
+            boolean found = false;
+            for(int j = 0; j < touches.size() && !found; j++) {
+                if (buttons[i].contains(touches.get(j))) {
+                    bitmask |= 1 << i;
+                    found = true;
+                    System.out.println("Collision at" + touches.get(j).x + ", " + touches.get(j).x);
+                }
+            }
+        }
+
+        //Clear the array of touches
+        touches.clear();
+
+        return bitmask;
     }
 }

@@ -66,7 +66,7 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//Get touchscreen state
-		input_bitmask = touch_processor.getBitmask();
+		input_bitmask = touch_processor.getBitmask(buttons);
 
 		//Update
 
