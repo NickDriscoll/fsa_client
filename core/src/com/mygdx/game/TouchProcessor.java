@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 
@@ -45,8 +46,10 @@ public class TouchProcessor implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        System.out.println("Touch at " + screenX + ". " + screenY);
-        touches.add(new Vector2(screenX, screenY));
+        System.out.println("Touch at " + screenX + ", " + screenY);
+
+        //Touch coordinates are top left relative so we have to fix that
+        touches.add(new Vector2(screenX, Gdx.graphics.getHeight() - screenY));
         return true;
     }
 
