@@ -75,6 +75,7 @@ public class Game extends ApplicationAdapter {
             to_server.write(input_bitmask);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+            System.exit(0);
         }
 
 		//Get game state from server
