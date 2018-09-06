@@ -24,13 +24,11 @@ public class Game extends ApplicationAdapter {
 	TouchProcessor touch_processor;
 	OutputStream to_server;
 
-	char input_bitmask;
-
 	final int NUMBER_OF_BUTTONS = 6;
 
 	private boolean connect_to_server() {
 	    try {
-            socket = new Socket("192.168.1.188", 1337);
+            socket = new Socket("192.168.1.5", 1337);
         } catch (IOException e) {
 	        return false;
         }
@@ -45,8 +43,6 @@ public class Game extends ApplicationAdapter {
 
 		touch_processor = new TouchProcessor();
 		Gdx.input.setInputProcessor(touch_processor);
-
-		input_bitmask = 0;
 
 		//Initialize the six buttons
 		buttons = new ButtonInput[NUMBER_OF_BUTTONS];
@@ -66,7 +62,7 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		//Get touchscreen state
-		input_bitmask = touch_processor.getBitmask(buttons);
+		byte[] input_bitmask = touch_processor.getBitmask(buttons);
 
 		//Update
 

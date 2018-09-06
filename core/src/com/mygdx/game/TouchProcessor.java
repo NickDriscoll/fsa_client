@@ -9,6 +9,7 @@ import java.util.List;
 
 public class TouchProcessor implements InputProcessor {
     private List<Vector2> touches;
+    private List<Vector2> touchups;
     final int MAX_NUMBER_OF_TOUCHES = 10;
 
     @Override
@@ -56,31 +57,46 @@ public class TouchProcessor implements InputProcessor {
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         System.out.println("Release at " + screenX + ", " + screenY);
+
+        //Touch coordinates are top left relative so we have to fix that
+        touchups.add(new Vector2(screenX, Gdx.graphics.getHeight() - screenY));
         return true;
     }
 
     public TouchProcessor() {
         touches = new ArrayList<Vector2>();
+        touchups = new ArrayList<Vector2>();
     }
 
-    public char getBitmask(ButtonInput[] buttons) {
-        char bitmask = 0;
+    public byte[] getBitmask(ButtonInput[] buttons) {
+        byte[] bitmasks = {0, 0};
 
-        //Collision check here
+        //Collision check for touches
         for (int i = 0; i < buttons.length; i++) {
             boolean found = false;
             for(int j = 0; j < touches.size() && !found; j++) {
                 if (buttons[i].contains(touches.get(j))) {
-                    bitmask |= 1 << i;
+                    bitmasks[0] |= 1 << i;
                     found = true;
-                    System.out.println("Collision at" + touches.get(j).x + ", " + touches.get(j).x);
                 }
             }
         }
 
-        //Clear the array of touches
-        touches.clear();
+        //Collision check for lifts
+        for (int i = 0; i < buttons.length; i++) {
+            boolean found = false;
+            for (int j = 0; j < touchups.size() && !found; j++) {
+                if (buttons[i].contains(touchups.get(j))) {
+                    bitmasks[1] |= 1 << i;
+                    found = true;
+                }
+            }
+        }
 
-        return bitmask;
+        //Clear the lists
+        touches.clear();
+        touchups.clear();
+
+        return bitmasks;
     }
 }
