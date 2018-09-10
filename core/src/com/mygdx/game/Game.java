@@ -28,7 +28,7 @@ public class Game extends ApplicationAdapter {
 
 	private boolean connect_to_server() {
 	    try {
-            socket = new Socket("192.168.1.5", 1337);
+                socket = new Socket("192.168.1.7", 1337);
         } catch (IOException e) {
 	        return false;
         }
